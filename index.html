@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes Applis EPS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --c1: #FF6B6B; /* rouge-corail */
+    --c2: #FFD93D; /* jaune vif */
+    --c3: #6BCB77; /* vert */
+    --c4: #4D96FF; /* bleu */
+    --c5: #FF922B; /* orange */
+    --c6: #cc5de8; /* violet */
+    --c7: #20c997; /* teal */
+    --bg: #f8f6ff;
+    --card-bg: #ffffff;
+    --text: #2d2d2d;
+    --muted: #8e8e9a;
+    --radius: 18px;
+  }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 40px;
+  }
+
+  header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 32px 24px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -50px; left: -20px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 50%;
+  }
+  header h1 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: 2rem;
+    color: #fff;
+    letter-spacing: -0.5px;
+    position: relative;
+    z-index: 1;
+  }
+  header p.sub {
+    color: rgba(255,255,255,0.75);
+    font-size: 0.95rem;
+    margin-top: 6px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 16px 24px;
+    background: #fff;
+    border-bottom: 2px solid #efefef;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .stat-pill span.dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .stat-pill span.count {
+    font-size: 1.1rem;
+    color: var(--text);
+  }
+
+  .filter-bar {
+    padding: 16px 20px 8px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .filter-btn {
+    border: none;
+    padding: 6px 14px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: 'Nunito', sans-serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: #e8e8f0;
+    color: var(--muted);
+  }
+  .filter-btn.active, .filter-btn:hover {
+    background: #667eea;
+    color: #fff;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+    gap: 20px;
+    padding: 16px 24px 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    transition: box-shadow 0.25s, transform 0.25s;
+    position: relative;
+  }
+  .card:hover {
+    box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+    transform: translateY(-3px);
+  }
+
+  .card-accent {
+    height: 8px;
+  }
+
+  .card-body {
+    padding: 18px 20px 14px;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .card-title {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.3;
+    transition: color 0.2s;
+  }
+  .card-title:hover {
+    color: #667eea;
+  }
+  .card-title::after {
+    content: ' ›';
+    font-size: 1rem;
+    opacity: 0.4;
+    transition: opacity 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .card-title:hover::after {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+
+  .compte-badge {
+    font-size: 0.68rem;
+    color: var(--muted);
+    background: #f0f0f7;
+    padding: 3px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    font-weight: 600;
+    opacity: 0.7;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .chips {
+    display: flex;
+    gap: 7px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-family: 'Nunito', sans-serif;
+  }
+  .chip-note-yes {
+    background: #fff3cd;
+    color: #8a6100;
+  }
+  .chip-note-no {
+    background: #f0f0f7;
+    color: #8e8e9a;
+  }
+  .chip-note-partial {
+    background: #fde8c8;
+    color: #a04d00;
+  }
+  .chip-note-x {
+    background: #f0f0f7;
+    color: #8e8e9a;
+  }
+  .chip-storage-yes {
+    background: #d4f4e2;
+    color: #1a6b3a;
+  }
+  .chip-storage-no {
+    background: #f0f0f7;
+    color: #8e8e9a;
+  }
+  .chip-storage-x {
+    background: #f0f0f7;
+    color: #8e8e9a;
+  }
+
+  /* Detail panel */
+  .detail-panel {
+    display: none;
+    background: #f8f6ff;
+    border-top: 2px dashed #e0dff0;
+    padding: 16px 20px;
+    animation: slideDown 0.25s ease;
+  }
+  .detail-panel.open {
+    display: block;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .detail-section {
+    margin-bottom: 12px;
+  }
+  .detail-section:last-child { margin-bottom: 0; }
+  .detail-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 800;
+    color: #667eea;
+    margin-bottom: 4px;
+    font-family: 'Nunito', sans-serif;
+  }
+  .detail-text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .warning-text {
+    color: #c0392b;
+    font-weight: 700;
+  }
+
+  .no-result {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-size: 1rem;
+    display: none;
+  }
+
+  .search-wrap {
+    padding: 12px 20px 0;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .search-input {
+    width: 100%;
+    padding: 10px 18px;
+    border: 2px solid #e0dff0;
+    border-radius: 40px;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-input:focus {
+    border-color: #667eea;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🏃 Mes Applis EPS</h1>
+  <p class="sub">Toutes mes applications pédagogiques en un coup d'œil</p>
+</header>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<div class="search-wrap">
+  <input type="text" class="search-input" id="searchInput" placeholder="🔍 Rechercher une appli…" oninput="applyFilters()">
+</div>
+
+<div class="filter-bar" id="filterBar">
+  <button class="filter-btn active" onclick="setFilter('all', this)">Toutes</button>
+  <button class="filter-btn" onclick="setFilter('note', this)">📊 Donne la note</button>
+  <button class="filter-btn" onclick="setFilter('storage', this)">☁️ Stockage en ligne</button>
+  <button class="filter-btn" onclick="setFilter('both', this)">⭐ Note + Stockage</button>
+</div>
+
+<div class="grid" id="appGrid"></div>
+<div class="no-result" id="noResult">Aucune appli trouvée 😕</div>
+
+<script>
+const COLORS = ['#FF6B6B','#FFD93D','#6BCB77','#4D96FF','#FF922B','#cc5de8','#20c997','#f06595','#74c0fc','#63e6be','#ffa94d','#a9e34b'];
+
+const apps = [
+  {
+    name: "Analyse basket",
+    compte: "Mail IA",
+    consignes: "Choisir la couleur de l'équipe, saisir nom élève, classe. Choix entre analyse globale ou fine. Globale = pour l'élève : actions + / actions −. Fine = actions + = tir ou panier / interception / bonne passe // action − = mauvaise passe / tir à côté / tire face à défenseur.",
+    note: "non",
+    remarques: "⚠️ Actualiser la page efface tout !",
+    stockage: "oui"
+  },
+  {
+    name: "Crossfit vidéos",
+    compte: "Mail IA",
+    consignes: "Vidéos rangées par familles (stockées sur le drive – dossier crossfit), puis exercices avec consignes et vidéo (qui ne tourne pas en boucle, à relancer pour revoir).",
+    note: "non",
+    remarques: "",
+    stockage: "non"
+  },
+  {
+    name: "Demi fond 4e",
+    compte: "Mail IA",
+    consignes: "Saisir durée de courses + nombre de fractionnés. Course aux plots (objectifs à atteindre en 1'30, sur une durée de…). Récap de ce que j'ai fait pendant ma pause = mon temps d'observation.",
+    note: "oui",
+    remarques: "La note d'observation et d'échauffement est à faire, ça donne seulement la note des courses. Barème à consulter.",
+    stockage: "oui"
+  },
+  {
+    name: "Eval bad 3e",
+    compte: "Mail IA",
+    consignes: "Dire si groupes de 3, 4, ou 5. Prise en compte du nombre de lobs, amortis, smashs, points marqués grâce au service ; Ordre des matchs intégrés, avec qui fait quoi. 2 observateurs sur la même tablette, pour 2 joueurs.",
+    note: "oui",
+    remarques: "Le score final est à saisir, mais il faut un arbitre pour compter les points (qui sera évalué aussi, et les observateurs seront aussi évalués).",
+    stockage: "oui"
+  },
+  {
+    name: "Eval crossfit 3e",
+    compte: "Eps domart",
+    consignes: "Saisir les renseignements demandés… Crossfiter, juge + coach éventuel, donc groupes de 3 ou 4. Nombre de répétitions pré saisi.",
+    note: "oui",
+    remarques: "",
+    stockage: "oui"
+  },
+  {
+    name: "Eval crossfit 5e",
+    compte: "Eps domart",
+    consignes: "Saisir les renseignements demandés… Crossfiter, juge + coach éventuel, donc groupes de 2 ou 3. Nombre de répétitions pré saisi.",
+    note: "oui",
+    remarques: "⚠️ Actualiser la page efface tout ! Barème sur le drive.",
+    stockage: "oui"
+  },
+  {
+    name: "Suivi crossfit",
+    compte: "h.demailly80",
+    consignes: "Par 2. Saisir familles / exercices / niveau / séries / répétitions / no rep.",
+    note: "non",
+    remarques: "⚠️ Actualiser la page efface tout ! Des données peuvent sembler pré-saisies dans le formulaire, mais elles ne le sont pas, même si c'est écrit 0, il faut taper 0.",
+    stockage: "oui"
+  },
+  {
+    name: "Suivi cycle demi fond 3e",
+    compte: "Mail IA",
+    consignes: "Saisir les données…",
+    note: "partiel",
+    remarques: "⚠️ Actualiser la page efface tout ! Note uniquement sur le % de VMA de la séance.",
+    stockage: "oui"
+  },
+  {
+    name: "Suivi escalade",
+    compte: "Mail IA",
+    consignes: "Choix de saisie entre difficulté de voie / nombre de prises de mains + possibilité de recherche des performances antérieures. Prise en compte du nœud magique.",
+    note: "partiel",
+    remarques: "Note d'assurage à saisir par le prof. Notes prises mains et perfs en fonction du barème sur le drive.",
+    stockage: "oui"
+  },
+  {
+    name: "Suivi bad",
+    compte: "Eps domart",
+    consignes: "Saisir adversaires, matchs (n pts à déterminer soi-même), donne les stats sur points « basiques », lobs, amortis, services, smashs et points bonus pour chaque manière en option (1 pt bonus vaut 3).",
+    note: "non",
+    remarques: "",
+    stockage: "oui"
+  },
+  {
+    name: "Orientation v31",
+    compte: "—",
+    consignes: "Groupes de 2 à 4 élèves. Possibilité de positionner les balises sur la carte (en cliquant sur balises – choisir le n° de balise), saisir la durée pour l'exercice, possibilité d'annuler la dernière action enregistrée, possibilité de tracer son parcours en glissant le doigt sur l'écran, possibilité d'effacer toutes les données.",
+    note: "non",
+    remarques: "",
+    stockage: "non"
+  },
+  {
+    name: "Eval demi fond 3e",
+    compte: "h.demailly80",
+    consignes: "Saisir les données. Échauffement de 4' inclus dans la séance, le chrono défile, la tablette bipe, pour dire ce qu'il faut faire.",
+    note: "oui",
+    remarques: "Barème : si marche ou arrêt, la note de course est divisée par 2. Donne note finale car note échauffement et récupération incluse dans l'appli.",
+    stockage: "oui"
+  },
+  {
+    name: "Test VMA",
+    compte: "Mail IA",
+    consignes: "Test VMA 36''/24''. Bouton « arrêter le test » = met en pause.",
+    note: "x",
+    remarques: "⚠️ Actualiser la page efface tout !",
+    stockage: "oui"
+  },
+  {
+    name: "Gym 5e",
+    compte: "Pptx",
+    consignes: "Utiliser l'appli pour ouvrir.",
+    note: "x",
+    remarques: "",
+    stockage: "non"
+  },
+  {
+    name: "Acrosport",
+    compte: "Pptx",
+    consignes: "Utiliser l'appli pour ouvrir.",
+    note: "x",
+    remarques: "",
+    stockage: "non"
+  },
+  {
+    name: "Référencement sheets",
+    compte: "Eps domart",
+    consignes: "—",
+    note: "x",
+    remarques: "",
+    stockage: "x"
+  }
+];
+
+let currentFilter = 'all';
+
+function noteLabel(val) {
+  switch(val) {
+    case 'oui': return { text: '📊 Donne la note', cls: 'chip-note-yes' };
+    case 'non': return { text: '— Pas de note', cls: 'chip-note-no' };
+    case 'partiel': return { text: '📊 Note partielle', cls: 'chip-note-partial' };
+    default: return { text: '— Note : N/A', cls: 'chip-note-x' };
+  }
+}
+
+function storageLabel(val) {
+  switch(val) {
+    case 'oui': return { text: '☁️ Stockage en ligne', cls: 'chip-storage-yes' };
+    case 'non': return { text: '— Pas de stockage', cls: 'chip-storage-no' };
+    default: return { text: '— Stockage : N/A', cls: 'chip-storage-x' };
+  }
+}
+
+function buildCard(app, idx) {
+  const color = COLORS[idx % COLORS.length];
+  const nl = noteLabel(app.note);
+  const sl = storageLabel(app.stockage);
+
+  const hasConsignes = app.consignes && app.consignes !== '—';
+  const hasRemarques = app.remarques && app.remarques.trim() !== '';
+
+  let detailHTML = '';
+  if (hasConsignes) {
+    detailHTML += `<div class="detail-section">
+      <div class="detail-label">📋 Consignes de fonctionnement</div>
+      <div class="detail-text">${app.consignes}</div>
+    </div>`;
+  }
+  if (hasRemarques) {
+    const isWarning = app.remarques.includes('⚠️');
+    detailHTML += `<div class="detail-section">
+      <div class="detail-label">💬 Remarques</div>
+      <div class="detail-text ${isWarning ? 'warning-text' : ''}">${app.remarques}</div>
+    </div>`;
+  }
+  if (!hasConsignes && !hasRemarques) {
+    detailHTML = '<div class="detail-text" style="color:#aaa;font-style:italic;">Aucune information complémentaire.</div>';
+  }
+
+  return `
+    <div class="card" data-note="${app.note}" data-stockage="${app.stockage}" data-name="${app.name.toLowerCase()}">
+      <div class="card-accent" style="background:${color}"></div>
+      <div class="card-body">
+        <div class="card-top">
+          <div class="card-title" onclick="toggleDetail(this)">${app.name}</div>
+          <span class="compte-badge">${app.compte}</span>
+        </div>
+        <div class="chips">
+          <span class="chip ${nl.cls}">${nl.text}</span>
+          <span class="chip ${sl.cls}">${sl.text}</span>
+        </div>
+      </div>
+      <div class="detail-panel">
+        ${detailHTML}
+      </div>
+    </div>
+  `;
+}
+
+function toggleDetail(titleEl) {
+  const panel = titleEl.closest('.card').querySelector('.detail-panel');
+  panel.classList.toggle('open');
+}
+
+function setFilter(filter, btn) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const cards = document.querySelectorAll('.card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    const note = card.dataset.note;
+    const stockage = card.dataset.stockage;
+    const name = card.dataset.name;
+
+    let show = true;
+
+    if (search && !name.includes(search)) show = false;
+
+    if (show && currentFilter === 'note' && note !== 'oui' && note !== 'partiel') show = false;
+    if (show && currentFilter === 'storage' && stockage !== 'oui') show = false;
+    if (show && currentFilter === 'both' && (note !== 'oui' && note !== 'partiel') || (currentFilter === 'both' && stockage !== 'oui')) show = false;
+
+    card.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+
+  document.getElementById('noResult').style.display = visible === 0 ? 'block' : 'none';
+}
+
+function buildStats() {
+  const total = apps.length;
+  const withNote = apps.filter(a => a.note === 'oui' || a.note === 'partiel').length;
+  const withStorage = apps.filter(a => a.stockage === 'oui').length;
+
+  document.getElementById('statsBar').innerHTML = `
+    <div class="stat-pill"><span class="dot" style="background:#667eea"></span> <span class="count">${total}</span> applis</div>
+    <div class="stat-pill"><span class="dot" style="background:#FFD93D"></span> <span class="count">${withNote}</span> donnent la note</div>
+    <div class="stat-pill"><span class="dot" style="background:#6BCB77"></span> <span class="count">${withStorage}</span> avec stockage en ligne</div>
+  `;
+}
+
+function init() {
+  const grid = document.getElementById('appGrid');
+  grid.innerHTML = apps.map((app, i) => buildCard(app, i)).join('');
+  buildStats();
+}
+
+init();
+</script>
+</body>
+</html>
